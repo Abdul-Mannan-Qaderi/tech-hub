@@ -1,9 +1,9 @@
 {% extends "base_layout.html" %} {% block content %}
 <h1>Home page</h1>
 
+<a href="{% url 'create-room' %}">Create Room</a>
 {% for room in rooms %}
 <div class="room">
-	<a href="{% url 'create-room' %}">Create Room</a>
 	<p>@{{ room.host.username }}</p>
 	<h1>
 		{{ room.id }} -- <a href="{% url 'room' room.id %}">{{ room.name }}</a>

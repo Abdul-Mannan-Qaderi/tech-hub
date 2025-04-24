@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 
 class Topic(models.Model):
   name = models.CharField(max_length=255)
-    
   def __str__(self):
     return self.name
 
@@ -18,19 +17,16 @@ class Room(models.Model):
   # participants
   last_updated = models.DateTimeField(auto_now=True)
   created_at = models.DateTimeField(auto_now_add=True)
-  
   def __str__(self):
       return self.name
   
   
 class Message(models.Model):
-  
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   room = models.ForeignKey(Room, on_delete=models.CASCADE)
   body = models.TextField()
   last_updated = models.DateTimeField(auto_now=True)
   created_at = models.DateTimeField(auto_now_add=True)
-  
   def __str__(self):
       return self.body[:50]
   
