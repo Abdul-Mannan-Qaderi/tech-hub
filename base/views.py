@@ -1,8 +1,32 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.models import User
 from .models import Room, Topic
+from django.contrib.auth import authenticate, login, logout
+
 from django.db.models import Q
 from .forms import RoomForm
 # Create your views here.
+
+
+def login_view(request): 
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            messages.error(request, "User does not exist.")
+            return redirect('login')  # redirect back to the login page
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+          login(request, user)
+          return redirect('home')
+        else: 
+          messages.error(request, 'User OR Password does not exist')
+    return render(request, 'base/login_form.html')
+
 
 
 def home(request): 
@@ -18,10 +42,12 @@ def home(request):
   return render(request, 'base/home.html', context)
 
 
+
 def room(request, pk): 
   room = Room.objects.get(id=pk)
   context={'room':room}
   return render(request, 'base/room.html', context)
+
 
 
 def create_room(request): 
@@ -34,6 +60,8 @@ def create_room(request):
   context = {'form': form}
   return render(request, 'base/room-form.html', context)
 
+
+
 def update_room(request, pk): 
   room = Room.objects.get(id = pk)
   form = RoomForm(instance=room)
@@ -45,6 +73,7 @@ def update_room(request, pk):
       return redirect('home')
   context={'form': form}
   return render(request, 'base/room-form.html', context)
+
 
 
 def delete_room(request, pk):
