@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -10,15 +11,14 @@ from .forms import RoomForm
 # Create your views here.
 
 
-def login_view(request):  
-  
+def login_view(request):   
+  page = 'login'
   if request.user.is_authenticated:
     return redirect('home')
-   
   if request.method == 'POST':
-      username = request.POST.get('username')
+      username = request.POST.get('username').lower()
       password = request.POST.get('password')
-
+      
       try:
           user = User.objects.get(username=username)
       except User.DoesNotExist:
@@ -30,12 +30,30 @@ def login_view(request):
         return redirect('home')
       else: 
         messages.error(request, 'User OR Password does not exist')
-  return render(request, 'base/login_form.html')
+  context = {'page':page}
+  return render(request, 'base/login_register.html', context)
 
+
+def register_view(request):
+  form = UserCreationForm
+  
+  if request.method=='POST':
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+      user = form.save(commit=False)
+      user.username = user.username.lower()
+      user.save()
+      login(request, user)
+      return redirect('home')
+    else: 
+      messages.error(request, 'Something went wrong with Signing up!')   
+  context = {'form':form}
+  return render(request, 'base/login_register.html', context)
 
 def logout_view(request):
   logout(request)
   return redirect('login')
+
 
 def home(request): 
   q = request.GET.get('q') or ''
@@ -49,13 +67,10 @@ def home(request):
   context = {'rooms': rooms, 'topics': topics, 'room_count':room_count}
   return render(request, 'base/home.html', context)
 
-
-
 def room(request, pk): 
   room = Room.objects.get(id=pk)
   context={'room':room}
   return render(request, 'base/room.html', context)
-
 
 @login_required(login_url='/login')
 def create_room(request): 
@@ -67,7 +82,6 @@ def create_room(request):
       return redirect('home')
   context = {'form': form}
   return render(request, 'base/room-form.html', context)
-
 
 @login_required(login_url='/login')
 def update_room(request, pk): 
@@ -84,7 +98,6 @@ def update_room(request, pk):
       return redirect('home')
   context={'form': form}
   return render(request, 'base/room-form.html', context)
-
 
 @login_required(login_url='/login')
 def delete_room(request, pk):

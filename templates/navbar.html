@@ -5,8 +5,12 @@
 
 {% if request.user.is_authenticated %}
 <a href="{% url 'logout' %}">LOGOUT</a>
-{% else %} {% if "login" not in request.path %}
+{% else %}<br />
+{% if "login" not in request.path and "register" not in request.path %}
 <a href="{% url 'login' %}">LOGIN</a>
-{% endif %} {% endif %}
+{% endif %} {% endif %} {% if request.user %}
+<p>Welcome {{request.user}}</p>
+
+{% endif %}
 
 <hr />
