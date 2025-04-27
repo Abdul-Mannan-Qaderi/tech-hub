@@ -1,26 +1,50 @@
 {% extends "base_layout.html" %} {% block title %} Details for {{ room.name }}
 {% endblock %} {% block content %}
 
-<h1>{{ room.name }}</h1>
-<p>{{ room.description }}</p>
-<hr />
-<div class="comment-wrapper">
-	<h3>Conversation</h3>
-
-	{% for message in room_messages %}
+<style>
+	.room-container {
+		display: grid;
+		grid-template-columns: 3fr 1fr;
+	}
+</style>
+<div class="room-container">
 	<div>
-		<small>@{{message.user}} {{message.created_at|timesince}} ago</small>
-		<p>{{message.body}}</p>
+		<h1>{{ room.name }}</h1>
+		<p>{{ room.description }}</p>
+		<hr />
+		<div class="comment-wrapper">
+			<h3>Conversation</h3>
+
+			{% for message in room_messages %}
+			<div>
+				<small>@{{message.user}} {{message.created_at|timesince}} ago</small>
+				<p>{{message.body}}</p>
+			</div>
+			{% endfor %}
+		</div>
+
+		{% if request.user.is_authenticated %}
+		<div class="comment-form">
+			<form action="" method="post">
+				{% csrf_token %}
+				<input
+					type="text"
+					placeholder="Write your message here..."
+					name="body"
+				/>
+			</form>
+		</div>
+		{% endif %}
 	</div>
-	{% endfor %}
-</div>
+	<div class="participants">
+		<h3>Participants</h3>
+		<hr />
 
-{% if request.user.is_authenticated %}
-<div class="comment-form">
-	<form action="" method="post">
-		{% csrf_token %}
-		<input type="text" placeholder="Write your message here..." name="body" />
-	</form>
+		{% for user in participants %}
+		<div class="participant">
+			<p>@{{user.username}}</p>
+		</div>
+		{% endfor %}
+	</div>
 </div>
-
-{% endif %} {% endblock content %}
+{% endblock content %}

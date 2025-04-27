@@ -14,7 +14,7 @@ class Room(models.Model):
   host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
   name = models.CharField(max_length=255)
   description = models.TextField(null=True, blank=True)
-  # participants
+  participants = models.ManyToManyField(User, related_name='participants', blank=True)
   last_updated = models.DateTimeField(auto_now=True)
   created_at = models.DateTimeField(auto_now_add=True)
   def __str__(self):
