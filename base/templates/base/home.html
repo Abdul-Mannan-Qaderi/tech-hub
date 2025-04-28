@@ -2,7 +2,8 @@
 <style>
 	.home-container {
 		display: grid;
-		grid-template-columns: 1fr 3fr;
+		grid-template-columns: 1fr 3fr 1fr;
+		gap: 10px;
 	}
 </style>
 <div class="home-container">
@@ -36,6 +37,22 @@
 			</h1>
 			<small class="topic-name">{{ room.topic.name }}</small>
 		</div>
+		{% endfor %}
+	</div>
+
+	<div>
+		<h3>Recent Activity</h3>
+		{% for message in room_messages %}
+
+		<div>
+			<small>@{{message.user}} {{message.created_at|timesince}}</small>
+			<small>Replied to "{{message.room}}"</small>
+			<p>{{message}}</p>
+			{% if request.user == message.user %}
+			<a href="{% url 'delete-message' message.id %}">Delete</a>
+			{% endif %}
+		</div>
+		<hr />
 		{% endfor %}
 	</div>
 </div>
