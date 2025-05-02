@@ -1,40 +1,18 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<style>
-			.room {
-				border: 1px solid grey;
-				border-radius: 8px;
-				margin-bottom: 8px;
-				padding: 8px;
-			}
-
-			.helptext {
-				display: none;
-			}
-			small.topic-name {
-				text-align: right;
-				background-color: grey;
-				padding: 4px 8px;
-				border-radius: 4px;
-				color: white;
-			}
-		</style>
 		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>{% block title %} {% endblock %}</title>
-		<link
-			rel="stylesheet"
-			type="text/css"
-			media="screen"
-			href="/static/styles/main.css"
-		/>
+		<link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+		<link rel="stylesheet" href="{% static 'styles/style.css' %}" />
+		<title>StudyBuddy - Find study partners around the world!</title>
 	</head>
-	<body>
-		<header>{% include 'navbar.html' %}</header>
 
-		{% if messages %}
+	<body>
+		{% include 'navbar.html' %} {% if messages %}
 		<ul class="messages">
 			{% for message in messages %}
 			<li class="{{ message.tags }}">{{ message }}</li>
@@ -42,5 +20,6 @@
 		</ul>
 		{% endif %}<br />
 		{% block content %} {% endblock %}
+		<script src="{% static 'js/script.js' %}"></script>
 	</body>
 </html>
