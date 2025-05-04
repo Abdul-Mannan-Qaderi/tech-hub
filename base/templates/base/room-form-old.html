@@ -1,0 +1,10 @@
+{% extends "base_layout.html" %} {% block title %} Create Room {% endblock %}<br />
+{% block content %}
+
+<form action="" method="post">
+	{% csrf_token %} {{ form.as_p }}
+
+	<input type="submit" value="Create Room" />
+</form>
+
+{% endblock content %}
