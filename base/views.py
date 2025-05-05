@@ -88,10 +88,6 @@ def user_profile(request, pk):
   context = {'user':user, 'rooms':rooms, 'room_messages':room_messages, 'topics':topics}
   return render(request, 'base/profile.html', context)
 
-
-
-
-
 @login_required(login_url='/login')
 def create_room(request): 
   form = RoomForm()
@@ -117,9 +113,6 @@ def create_room(request):
   context = {'form': form, 'topics':topics}
   return render(request, 'base/room-form.html', context)
 
-
-
-
 @login_required(login_url='/login')
 def update_room(request, pk): 
   room = Room.objects.get(id = pk)
@@ -130,11 +123,14 @@ def update_room(request, pk):
     return HttpResponse('You can only edit your own posts')
   
   if request.method == 'POST':
-    form = RoomForm(request.POST, instance=room)
-    if form.is_valid():
-      form.save()
-      return redirect('home')
-  context={'form': form, 'topics': topics}
+    topic_name = request.POST.get('topic')
+    topic, created= Topic.objects.get_or_create(name=topic_name) 
+    room.name = request.POST.get('name')
+    room.topic =topic
+    room.description = request.POST.get('description')
+    room.save()
+    return redirect('home')
+  context={'form': form, 'topics': topics, 'room':room}
   return render(request, 'base/room-form.html', context)
 
 @login_required(login_url='/login')
