@@ -103,11 +103,6 @@ def create_room(request):
       name= request.POST.get('name'),
       description = request.POST.get('description')
     )
-    
-    # if form.is_valid():
-    #   room = form.save(commit=False)
-    #   room.host = request.user
-    #   room.save()
     return redirect('home')
     
   context = {'form': form, 'topics':topics}
