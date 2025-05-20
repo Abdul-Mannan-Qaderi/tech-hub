@@ -32,8 +32,7 @@ def login_view(request):
   return render(request, 'base/login_register.html', context)
 
 def register_view(request):
-  form = UserCreationForm
-  
+  form = UserCreationForm()
   if request.method=='POST':
     form = UserCreationForm(request.POST)
     if form.is_valid():
@@ -43,7 +42,7 @@ def register_view(request):
       login(request, user)
       return redirect('home')
     else: 
-      messages.error(request, 'Something went wrong with Signing up!')   
+      messages.error(request, 'Something went wrong with Signing up! Maybe weak password!')   
   context = {'form':form}
   return render(request, 'base/login_register.html', context)
 
